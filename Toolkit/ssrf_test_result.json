@@ -1,0 +1,21 @@
+{
+    "url": "http://localhost:3001",
+    "success": true,
+    "status_code": 200,
+    "headers": {
+        "Vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Accept-Encoding",
+        "Cache-Control": "no-store, must-revalidate",
+        "X-Powered-By": "Next.js",
+        "Content-Type": "text/html; charset=utf-8",
+        "Content-Encoding": "gzip",
+        "Date": "Wed, 02 Jul 2025 16:41:49 GMT",
+        "Connection": "keep-alive",
+        "Keep-Alive": "timeout=5",
+        "Transfer-Encoding": "chunked"
+    },
+    "content_snippet": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/css/app/layout.css?v=1751474509115\" data-precedence=\"next_static/css/app/layout.css\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/webpack.js?v=1751474509115\"/><script src=\"/_next/static/chunks/main-app.js?v=1751474509115\" async=\"\"></script><script src=\"/_next/static/chunks/app-pages-internals",
+    "errors": [],
+    "warnings": [
+        "Request to localhost detected. Potential SSRF to internal systems!"
+    ]
+}

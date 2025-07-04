@@ -1,0 +1,4 @@
+flask
+requests
+password=letmein
+api_key=12345

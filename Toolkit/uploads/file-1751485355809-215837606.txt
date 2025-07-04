@@ -1,0 +1,27 @@
+# config_sample.py - Example file with sensitive data
+
+# Database configuration
+DATABASE_CONFIG = {
+    "host": "localhost",
+    "port": 5432,
+    "user": "admin",
+    "password": "s3cr3tP@ssw0rd!",  # This will trigger detection
+    "dbname": "production_db"
+}
+
+# API credentials
+API_SETTINGS = {
+    "api_key": "AKIAIOSFODNN7EXAMPLE",  # This will trigger detection
+    "api_secret": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",  # This will trigger detection
+    "base_url": "https://api.example.com"
+}
+
+# Authentication tokens
+AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"  # This will trigger detection
+
+# Other settings
+DEBUG_MODE = False
+MAX_RETRIES = 3
+
+# Secret for session management
+SESSION_SECRET = "my_super_secret_session_key_123"  # This will trigger detection
