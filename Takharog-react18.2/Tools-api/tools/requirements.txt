@@ -1,4 +1,0 @@
-ping3
-dnspython
-python-nmap
-scapy

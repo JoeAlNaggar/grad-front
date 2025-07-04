@@ -1,5 +1,0 @@
-Library
-	
-socket	
-typing	
-nmap
