@@ -160,19 +160,19 @@ export default function ProfileSetup() {
 
   if (authLoading) {
     return (
-      <div className="container mx-auto py-12 px-4 bg-neugray min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      <div className="container mx-auto py-12 px-4 bg-neugray dark:bg-gray-900 min-h-screen flex items-center justify-center ">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 dark:border-purple-400"></div>
       </div>
     )
   }
 
   if (!isAuthenticated) {
     return (
-      <div className="container mx-auto py-12 px-4 bg-neugray min-h-screen flex items-center justify-center">
-        <Card>
+      <div className="container mx-auto py-12 px-4 bg-neugray dark:bg-gray-900 min-h-screen flex items-center justify-center">
+        <Card className="dark:bg-slate-800 dark:border-slate-700">
           <CardContent className="p-6 text-center">
-            <h2 className="text-xl font-semibold mb-2">Authentication Required</h2>
-            <p className="text-gray-600">Please log in to access your profile setup.</p>
+            <h2 className="text-xl font-semibold mb-2 dark:text-white">Authentication Required</h2>
+            <p className="text-gray-600 dark:text-gray-300">Please log in to access your profile setup.</p>
           </CardContent>
         </Card>
       </div>
@@ -180,32 +180,32 @@ export default function ProfileSetup() {
   }
 
   return (
-    <div className="container mx-auto py-12 px-4 bg-neugray min-h-screen">
+    <div className="container mx-auto py-12 px-4 bg-neugray dark:bg-gray-900 min-h-screen">
       <div className="max-w-[100rem] mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-700 mb-2">Profile Setup</h1>
-          <p className="text-gray-600">Create and manage your professional profile</p>
+          <h1 className="text-3xl font-bold text-gray-700 dark:text-white mb-2">Profile Setup</h1>
+          <p className="text-gray-600 dark:text-gray-300">Create and manage your professional profile</p>
         </div>
 
-        <Card className="neu-card">
+        <Card className="neu-card dark:bg-slate-800 dark:border-slate-700" style={{ boxShadow: 'none' }}>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 dark:text-white">
               <User className="w-5 h-5" />
               {profileExists ? 'Update Profile' : 'Create Profile'}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="dark:text-gray-300">
               {profileExists ? 'Update your professional information' : 'Set up your professional information'}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
               <Tabs defaultValue="personal" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="personal" className="flex items-center gap-2">
+                <TabsList className="grid w-full grid-cols-2 dark:bg-slate-700" style={{ boxShadow: 'none' }}>
+                  <TabsTrigger value="personal" className="flex items-center gap-2 dark:text-gray-300 dark:data-[state=active]:bg-slate-600 dark:data-[state=active]:text-white" style={{ boxShadow: 'none' }}>
                     <User className="w-4 h-4" />
                     Personal
                   </TabsTrigger>
-                  <TabsTrigger value="professional" className="flex items-center gap-2">
+                  <TabsTrigger value="professional" className="flex items-center gap-2 dark:text-gray-300 dark:data-[state=active]:bg-slate-600 dark:data-[state=active]:text-white" style={{ boxShadow: 'none' }}>
                     <Briefcase className="w-4 h-4" />
                     Professional
                   </TabsTrigger>
@@ -214,8 +214,8 @@ export default function ProfileSetup() {
                 <TabsContent value="personal" className="space-y-6 mt-6">
                   {/* Profile Image Upload */}
                   <div className="flex flex-col items-center space-y-4">
-                    <Label className="text-sm font-medium text-gray-600">Profile Image</Label>
-                    <div className="relative w-32 h-32 rounded-full overflow-hidden neu-inset">
+                    <Label className="text-sm font-medium text-gray-600 dark:text-gray-300">Profile Image</Label>
+                    <div className="relative w-32 h-32 rounded-full overflow-hidden neu-inset dark:bg-slate-700" style={{ boxShadow: 'none' }}>
                       {previewUrl ? (
                         <img
                           src={previewUrl}
@@ -223,7 +223,7 @@ export default function ProfileSetup() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="absolute inset-0 flex items-center justify-center text-sm text-gray-500">
+                        <div className="absolute inset-0 flex items-center justify-center text-sm text-gray-500 dark:text-gray-400">
                           <div className="text-center">
                             <Upload className="w-8 h-8 mx-auto mb-2" />
                             <span>Upload</span>
@@ -233,7 +233,7 @@ export default function ProfileSetup() {
                         </div>
                       )}
                     </div>
-                    <Label className="cursor-pointer neu-button py-2 px-6 rounded-full text-gray-700 hover:text-primary transition-colors">
+                    <Label className="cursor-pointer neu-button dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600 py-2 px-6 rounded-full text-gray-700 hover:text-primary transition-colors" style={{ boxShadow: 'none' }}>
                       Select Image
                       <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                     </Label>
@@ -242,7 +242,7 @@ export default function ProfileSetup() {
                   <div className="grid grid-cols-2 gap-4">
                     {/* First Name - Readonly */}
                     <div>
-                      <Label htmlFor="first_name" className="block text-sm font-medium mb-2 text-gray-600">
+                      <Label htmlFor="first_name" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                         First Name
                       </Label>
                       <Input
@@ -250,14 +250,15 @@ export default function ProfileSetup() {
                         name="first_name"
                         value={formData.first_name}
                         readOnly
-                        className="neu-input bg-gray-50 cursor-not-allowed"
+                        className="neu-input bg-gray-50 dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600 cursor-not-allowed"
+                        style={{ boxShadow: 'none' }}
                         placeholder="First name from account"
                       />
                     </div>
 
                     {/* Last Name - Readonly */}
                     <div>
-                      <Label htmlFor="last_name" className="block text-sm font-medium mb-2 text-gray-600">
+                      <Label htmlFor="last_name" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                         Last Name
                       </Label>
                       <Input
@@ -265,14 +266,15 @@ export default function ProfileSetup() {
                         name="last_name"
                         value={formData.last_name}
                         readOnly
-                        className="neu-input bg-gray-50 cursor-not-allowed"
+                        className="neu-input bg-gray-50 dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600 cursor-not-allowed"
+                        style={{ boxShadow: 'none' }}
                         placeholder="Last name from account"
                       />
                     </div>
 
                     {/* Username - Readonly */}
                     <div>
-                      <Label htmlFor="username" className="block text-sm font-medium mb-2 text-gray-600">
+                      <Label htmlFor="username" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                         Username
                       </Label>
                       <Input
@@ -280,14 +282,15 @@ export default function ProfileSetup() {
                         name="username"
                         value={formData.username}
                         readOnly
-                        className="neu-input bg-gray-50 cursor-not-allowed"
+                        className="neu-input bg-gray-50 dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600 cursor-not-allowed"
+                        style={{ boxShadow: 'none' }}
                         placeholder="Username from account"
                       />
                     </div>
 
                     {/* Email - Readonly */}
                     <div>
-                      <Label htmlFor="email" className="block text-sm font-medium mb-2 text-gray-600">
+                      <Label htmlFor="email" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                         Email
                       </Label>
                       <Input
@@ -296,7 +299,8 @@ export default function ProfileSetup() {
                         type="email"
                         value={formData.email}
                         readOnly
-                        className="neu-input bg-gray-50 cursor-not-allowed"
+                        className="neu-input bg-gray-50 dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600 cursor-not-allowed"
+                        style={{ boxShadow: 'none' }}
                         placeholder="Email from account"
                       />
                     </div>
@@ -304,7 +308,7 @@ export default function ProfileSetup() {
 
                   {/* Phone Number */}
                   <div>
-                    <Label htmlFor="phone_number" className="block text-sm font-medium mb-2 text-gray-600">
+                    <Label htmlFor="phone_number" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                       Phone Number
                     </Label>
                     <Input
@@ -313,7 +317,8 @@ export default function ProfileSetup() {
                       value={formData.phone_number}
                       onChange={handleChange}
                       placeholder="+1234567890"
-                      className="neu-input"
+                      className="neu-input dark:bg-slate-700 dark:text-white dark:border-slate-600 dark:placeholder-gray-400"
+                      style={{ boxShadow: 'none' }}
                     />
                   </div>
                 </TabsContent>
@@ -321,7 +326,7 @@ export default function ProfileSetup() {
                 <TabsContent value="professional" className="space-y-6 mt-6">
                   {/* Job Title */}
                   <div>
-                    <Label htmlFor="job_title" className="block text-sm font-medium mb-2 text-gray-600">
+                    <Label htmlFor="job_title" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                       Job Title
                     </Label>
                     <Input
@@ -330,35 +335,36 @@ export default function ProfileSetup() {
                       value={formData.job_title}
                       onChange={handleChange}
                       placeholder="e.g., Security Analyst, Software Developer"
-                      className="neu-input"
+                      className="neu-input dark:bg-slate-700 dark:text-white dark:border-slate-600 dark:placeholder-gray-400"
+                      style={{ boxShadow: 'none' }}
                     />
                   </div>
 
                   {/* Job Status */}
                   <div>
-                    <Label htmlFor="job_status" className="block text-sm font-medium mb-2 text-gray-600">
+                    <Label htmlFor="job_status" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                       Job Status
                     </Label>
                     <Select
                       value={formData.job_status}
                       onValueChange={(value) => handleSelectChange('job_status', value)}
                     >
-                      <SelectTrigger className="neu-input">
+                      <SelectTrigger className="neu-input dark:bg-slate-700 dark:text-white dark:border-slate-600" style={{ boxShadow: 'none' }}>
                         <SelectValue placeholder="Select job status" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="employed">Employed</SelectItem>
-                        <SelectItem value="freelance">Freelancing</SelectItem>
-                        <SelectItem value="looking">Looking for opportunities</SelectItem>
-                        <SelectItem value="student">Student</SelectItem>
-                        <SelectItem value="entrepreneur">Entrepreneur</SelectItem>
+                      <SelectContent className="dark:bg-slate-800 dark:border-slate-600" style={{ boxShadow: 'none' }}>
+                        <SelectItem value="employed" className="dark:text-white dark:hover:bg-slate-700">Employed</SelectItem>
+                        <SelectItem value="freelance" className="dark:text-white dark:hover:bg-slate-700">Freelancing</SelectItem>
+                        <SelectItem value="looking" className="dark:text-white dark:hover:bg-slate-700">Looking for opportunities</SelectItem>
+                        <SelectItem value="student" className="dark:text-white dark:hover:bg-slate-700">Student</SelectItem>
+                        <SelectItem value="entrepreneur" className="dark:text-white dark:hover:bg-slate-700">Entrepreneur</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   {/* Years of Experience */}
                   <div>
-                    <Label htmlFor="years_of_experience" className="block text-sm font-medium mb-2 text-gray-600">
+                    <Label htmlFor="years_of_experience" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                       Years of Experience
                     </Label>
                     <Input
@@ -370,13 +376,14 @@ export default function ProfileSetup() {
                       value={formData.years_of_experience}
                       onChange={handleChange}
                       placeholder="e.g., 5"
-                      className="neu-input"
+                      className="neu-input dark:bg-slate-700 dark:text-white dark:border-slate-600 dark:placeholder-gray-400"
+                      style={{ boxShadow: 'none' }}
                     />
                   </div>
 
                   {/* Brief */}
                   <div>
-                    <Label htmlFor="brief" className="block text-sm font-medium mb-2 text-gray-600">
+                    <Label htmlFor="brief" className="block text-sm font-medium mb-2 text-gray-600 dark:text-gray-300">
                       Professional Brief
                     </Label>
                     <Textarea
@@ -386,19 +393,21 @@ export default function ProfileSetup() {
                       value={formData.brief}
                       onChange={handleChange}
                       placeholder="A brief description about your professional background, skills, and goals..."
-                      className="neu-input resize-none"
+                      className="neu-input dark:bg-slate-700 dark:text-white dark:border-slate-600 dark:placeholder-gray-400 resize-none"
+                      style={{ boxShadow: 'none' }}
                     />
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                       Describe your expertise, passion, and what makes you unique in your field.
                     </p>
                   </div>
                 </TabsContent>
 
-                <div className="flex justify-end space-x-4 mt-8 pt-6 border-t">
+                <div className="flex justify-end space-x-4 mt-8 pt-6 border-t dark:border-slate-600">
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="neu-button-primary px-8 py-2 flex items-center gap-2"
+                    className="neu-button-primary dark:bg-violet-600 dark:hover:bg-violet-700 px-8 py-2 flex items-center gap-2"
+                    style={{ boxShadow: 'none' }}
                   >
                     {isLoading ? (
                       <>
@@ -412,6 +421,7 @@ export default function ProfileSetup() {
                       </>
                     )}
                   </Button>
+                  
                 </div>
               </Tabs>
             </form>

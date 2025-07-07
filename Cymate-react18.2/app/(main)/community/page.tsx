@@ -263,7 +263,7 @@ export default function CommunityPage() {
 
   return (
     <Layout>
-      <h1 className="text-3xl font-bold mb-8 text-center">Cybersecurity Community</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center dark:text-white">Cybersecurity Community</h1>
 
       <div className="mb-8 flex flex-col gap-4 ">
         <div className="relative">
@@ -272,29 +272,32 @@ export default function CommunityPage() {
             placeholder="Search the community..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="dark:bg-slate-600 w-full py-3 px-4 pr-12 rounded-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:outline-none focus:ring-2 focus:ring-violet-300 transition duration-300 ease-in-out shadow-lg"
+            className="dark:bg-slate-800 dark:text-white dark:border-slate-600 w-full py-3 px-4 pr-12 rounded-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg focus:outline-none focus:ring-2 focus:ring-violet-300 dark:focus:ring-violet-400 transition duration-300 ease-in-out shadow-lg dark:placeholder-gray-400"
+            style={{ boxShadow: 'none' }}
           />
-          <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400" />
+          <MagnifyingGlassIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400 dark:text-gray-300" />
         </div>
         <div className="flex gap-4 items-center">
           <div className="relative">
             <Button
               variant="outline"
               onClick={() => setShowFilterInput(!showFilterInput)}
-              className="gap-2"
+              className="gap-2 dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-700"
+              style={{ boxShadow: 'none' }}
             >
               <AdjustmentsHorizontalIcon className="h-6 w-6 mr-2" />
               Filters
             </Button>
             {showFilterInput && (
-              <div className="absolute top-full left-0 mt-2 w-64  backdrop-filter backdrop-blur-lg rounded-xl shadow-lg p-1 z-10">
+              <div className="absolute top-full left-0 mt-2 w-64 backdrop-filter backdrop-blur-lg dark:bg-slate-800 dark:bg-opacity-90 bg-white bg-opacity-90 rounded-xl shadow-lg p-1 z-10 border dark:border-slate-600" style={{ boxShadow: 'none' }}>
                 <Input
                   type="text"
                   value={filterInput}
                   onChange={(e) => setFilterInput(e.target.value)}
                   onKeyPress={handleFilterInput}
                   placeholder="Filter by Tag"
-                  className="w-full py-2 px-3 rounded-lg bg-white bg-opacity-20 focus:outline-none focus:ring-2 focus:ring-violet-300"
+                  className="w-full py-2 px-3 rounded-lg bg-white bg-opacity-20 dark:bg-slate-700 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-300 dark:focus:ring-violet-400"
+                  style={{ boxShadow: 'none' }}
                 />
               </div>
             )}
@@ -302,7 +305,8 @@ export default function CommunityPage() {
           <Button
             variant={sortBy === "recent" ? "default" : "outline"}
             onClick={() => setSortBy("recent")}
-            className="gap-2"
+            className="gap-2 dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-700"
+            style={{ boxShadow: 'none' }}
           >
             <Clock className="w-4 h-4" />
             Recent
@@ -310,7 +314,8 @@ export default function CommunityPage() {
           <Button
             variant={sortBy === "trending" ? "default" : "outline"}
             onClick={() => setSortBy("trending")}
-            className="gap-2"
+            className="gap-2 "
+            style={{ boxShadow: 'none' }}
           >
             <TrendingUp className="w-4 h-4" />
             Trending
@@ -318,9 +323,9 @@ export default function CommunityPage() {
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
           {filterTags.map((tag) => (
-            <span key={tag} className="px-2 py-1 rounded-full bg-violet-500 text-white text-sm flex items-center">
+            <span key={tag} className="px-2 py-1 rounded-full bg-violet-500 dark:bg-violet-600 text-white text-sm flex items-center" style={{ boxShadow: 'none' }}>
               {tag}
-              <button onClick={() => removeTag(tag)} className="ml-1 focus:outline-none">
+              <button onClick={() => removeTag(tag)} className="ml-1 focus:outline-none hover:text-gray-200">
                 &times;
               </button>
             </span>
@@ -329,7 +334,7 @@ export default function CommunityPage() {
       </div>
 
       {error && (
-        <div className="text-red-500 text-center mb-4">
+        <div className="text-red-500 dark:text-red-400 text-center mb-4 bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-200 dark:border-red-800" style={{ boxShadow: 'none' }}>
           {error}
         </div>
       )}
@@ -369,13 +374,13 @@ export default function CommunityPage() {
 
       {loading && (
         <div className="text-center mt-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 dark:border-violet-400 mx-auto"></div>
         </div>
       )}
 
       {!loading && hasMore && (
         <div className="text-center mt-8">
-          <Button onClick={loadMore} variant="outline">
+          <Button onClick={loadMore} variant="outline" className="dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-700" style={{ boxShadow: 'none' }}>
             Load More
           </Button>
         </div>

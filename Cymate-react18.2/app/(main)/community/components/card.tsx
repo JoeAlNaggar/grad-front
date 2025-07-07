@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { useAuth } from "@/app/contexts/AuthContext"
-import { getImageUrl } from "@/app/services/api"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { 
-  Heart, 
-  MessageCircle, 
-  Share2, 
-  Bookmark, 
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { getImageUrl } from "@/app/services/api";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Heart,
+  MessageCircle,
+  Share2,
+  Bookmark,
   ThumbsUp,
   ThumbsDown,
   Zap,
@@ -20,14 +20,14 @@ import {
   Save,
   X,
   Trash2,
-  Upload
-} from "lucide-react"
+  Upload,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,63 +37,63 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { 
-  reactToPost, 
-  savePost, 
-  sharePost, 
-  commentOnPost, 
+} from "@/components/ui/alert-dialog";
+import {
+  reactToPost,
+  savePost,
+  sharePost,
+  commentOnPost,
   editPost,
   deletePost,
   editComment,
   deleteComment,
-  type Post, 
-  type Comment 
-} from "@/app/services/api"
-import { toast } from "sonner"
+  type Post,
+  type Comment,
+} from "@/app/services/api";
+import { toast } from "sonner";
 
 interface CardProps extends Post {
-  onUpdate?: (updatedPost: Post) => void
-  onDelete?: (postId: string) => void
+  onUpdate?: (updatedPost: Post) => void;
+  onDelete?: (postId: string) => void;
 }
 
 // Updated reaction icons for the new three reactions
 const reactionIcons = {
   Thunder: Zap,
   Love: Heart,
-  Dislike: ThumbsDown
-}
+  Dislike: ThumbsDown,
+};
 
 interface Author {
-  username: string
-  first_name?: string
-  last_name?: string
-  profile_picture?: string
-  avatar?: string
-  profile_image?: string
+  username: string;
+  first_name?: string;
+  last_name?: string;
+  profile_picture?: string;
+  avatar?: string;
+  profile_image?: string;
 }
 
 interface ProfileImageProps {
-  src?: string
-  alt: string
-  className: string
+  src?: string;
+  alt: string;
+  className: string;
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({ src, alt, className }) => {
-  const [imgError, setImgError] = useState(false)
-  const [imgSrc, setImgSrc] = useState(src || "/placeholder-user.jpg")
+  const [imgError, setImgError] = useState(false);
+  const [imgSrc, setImgSrc] = useState(src || "/placeholder-user.jpg");
 
   useEffect(() => {
-    setImgSrc(src || "/placeholder-user.jpg")
-    setImgError(false)
-  }, [src])
+    setImgSrc(src || "/placeholder-user.jpg");
+    setImgError(false);
+  }, [src]);
 
   const handleImageError = () => {
     if (!imgError && imgSrc !== "/placeholder-user.jpg") {
-      setImgError(true)
-      setImgSrc("/placeholder-user.jpg")
+      setImgError(true);
+      setImgSrc("/placeholder-user.jpg");
     }
-  }
+  };
 
   return (
     <img
@@ -102,17 +102,17 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ src, alt, className }) => {
       className={className}
       onError={handleImageError}
     />
-  )
-}
+  );
+};
 
-export default function Card({ 
-  id, 
+export default function Card({
+  id,
   author,
   post_type,
   title,
   content,
   image,
-  tags, 
+  tags,
   created_at,
   trend,
   comments_count,
@@ -125,223 +125,241 @@ export default function Card({
   is_saved,
   reactions,
   onUpdate,
-  onDelete 
+  onDelete,
 }: CardProps) {
-  const { user } = useAuth()
-  const [showComments, setShowComments] = useState(false)
-  const [newComment, setNewComment] = useState("")
-  const [isCommenting, setIsCommenting] = useState(false)
-  const [localComments, setLocalComments] = useState<Comment[]>(comments || [])
+  const { user } = useAuth();
+  const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [isCommenting, setIsCommenting] = useState(false);
+  const [localComments, setLocalComments] = useState<Comment[]>(comments || []);
   const [localReactions, setLocalReactions] = useState({
     Thunder: reactions?.Thunder || 0,
     Love: reactions?.Love || 0,
-    Dislike: reactions?.Dislike || 0
-  })
-  const [userReaction, setUserReaction] = useState<string | null>(user_reaction || null)
-  const [localIsSaved, setLocalIsSaved] = useState(is_saved || false)
-  const [localSharesCount, setLocalSharesCount] = useState(shares_count || 0)
-  const [localReactsCount, setLocalReactsCount] = useState(reacts_count || 0)
-  const [localSavesCount, setLocalSavesCount] = useState(saves_count || 0)
-  const [localIsShared, setLocalIsShared] = useState(is_shared || false)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editTitle, setEditTitle] = useState(title || "")
-  const [editContent, setEditContent] = useState(content)
-  const [isSaving, setIsSaving] = useState(false)
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [isDeleting, setIsDeleting] = useState(false)
-  
+    Dislike: reactions?.Dislike || 0,
+  });
+  const [userReaction, setUserReaction] = useState<string | null>(
+    user_reaction || null
+  );
+  const [localIsSaved, setLocalIsSaved] = useState(is_saved || false);
+  const [localSharesCount, setLocalSharesCount] = useState(shares_count || 0);
+  const [localReactsCount, setLocalReactsCount] = useState(reacts_count || 0);
+  const [localSavesCount, setLocalSavesCount] = useState(saves_count || 0);
+  const [localIsShared, setLocalIsShared] = useState(is_shared || false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(title || "");
+  const [editContent, setEditContent] = useState(content);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   // Image editing states
-  const [editImage, setEditImage] = useState<File | null>(null)
-  const [editImagePreview, setEditImagePreview] = useState<string | null>(null)
-  const [keepCurrentImage, setKeepCurrentImage] = useState(true)
-  
+  const [editImage, setEditImage] = useState<File | null>(null);
+  const [editImagePreview, setEditImagePreview] = useState<string | null>(null);
+  const [keepCurrentImage, setKeepCurrentImage] = useState(true);
+
   // Comment editing states
-  const [editingCommentId, setEditingCommentId] = useState<string | null>(null)
-  const [editCommentContent, setEditCommentContent] = useState("")
-  const [isEditingComment, setIsEditingComment] = useState(false)
-  const [showDeleteCommentDialog, setShowDeleteCommentDialog] = useState(false)
-  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(null)
-  const [isDeletingComment, setIsDeletingComment] = useState(false)
-  
-  const commentInputRef = useRef<HTMLInputElement>(null)
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editCommentContent, setEditCommentContent] = useState("");
+  const [isEditingComment, setIsEditingComment] = useState(false);
+  const [showDeleteCommentDialog, setShowDeleteCommentDialog] = useState(false);
+  const [deletingCommentId, setDeletingCommentId] = useState<string | null>(
+    null
+  );
+  const [isDeletingComment, setIsDeletingComment] = useState(false);
+
+  const commentInputRef = useRef<HTMLInputElement>(null);
 
   // Check if current user is the author (compare with username)
-  const currentUser = user?.username || ""
-  const isAuthor = currentUser === (typeof author === 'string' ? author : author.username)
+  const currentUser = user?.username || "";
+  const isAuthor =
+    currentUser === (typeof author === "string" ? author : author.username);
 
   // Calculate total reactions from individual counts
-  const totalReactions = localReactions.Thunder + localReactions.Love + localReactions.Dislike
-  const commentsCount = localComments.length
+  const totalReactions =
+    localReactions.Thunder + localReactions.Love + localReactions.Dislike;
+  const commentsCount = localComments.length;
 
   // Helper function to get author display information
   const getAuthorDisplayInfo = () => {
-    if (typeof author === 'string') {
+    if (typeof author === "string") {
       // Legacy format - author is just username
       if (user && user.username === author) {
         return {
-          fullName: `${user.first_name} ${user.last_name}`.trim() || 'Unknown User',
+          fullName:
+            `${user.first_name} ${user.last_name}`.trim() || "Unknown User",
           username: user.username,
-          profilePicture: user.profile_picture
-        }
+          profilePicture: user.profile_picture,
+        };
       }
       return {
         fullName: author,
         username: author,
-        profilePicture: undefined
-      }
+        profilePicture: undefined,
+      };
     } else {
       // New format - author is an object with complete metadata
       return {
-        fullName: `${author.first_name} ${author.last_name}`.trim() || author.username,
+        fullName:
+          `${author.first_name} ${author.last_name}`.trim() || author.username,
         username: author.username,
-        profilePicture: author.profile_picture
-      }
+        profilePicture: author.profile_picture,
+      };
     }
-  }
+  };
 
   // Helper function to get full name for comments (they have complete author object)
   const getFullName = (user: { first_name: string; last_name: string }) => {
-    return `${user.first_name} ${user.last_name}`.trim() || 'Unknown User'
-  }
+    return `${user.first_name} ${user.last_name}`.trim() || "Unknown User";
+  };
 
   // Handle image change in edit mode
   const handleEditImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
       // Validate file type
-      if (!file.type.startsWith('image/')) {
-        toast.error("Please select a valid image file")
-        return
+      if (!file.type.startsWith("image/")) {
+        toast.error("Please select a valid image file");
+        return;
       }
-      
+
       // Validate file size (max 10MB)
       if (file.size > 10 * 1024 * 1024) {
-        toast.error("Image file size must be less than 10MB")
-        return
+        toast.error("Image file size must be less than 10MB");
+        return;
       }
-      
-      setEditImage(file)
-      setKeepCurrentImage(false)
-      
+
+      setEditImage(file);
+      setKeepCurrentImage(false);
+
       // Create preview
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e) => {
-        setEditImagePreview(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
+        setEditImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   // Remove edit image
   const removeEditImage = () => {
-    setEditImage(null)
-    setEditImagePreview(null)
-    setKeepCurrentImage(false)
-  }
+    setEditImage(null);
+    setEditImagePreview(null);
+    setKeepCurrentImage(false);
+  };
 
   // Reset edit image to current
   const resetToCurrentImage = () => {
-    setEditImage(null)
-    setEditImagePreview(null)
-    setKeepCurrentImage(true)
-  }
+    setEditImage(null);
+    setEditImagePreview(null);
+    setKeepCurrentImage(true);
+  };
 
-  const handleReaction = async (reactionType: 'Love' | 'Dislike' | 'Thunder') => {
+  const handleReaction = async (
+    reactionType: "Love" | "Dislike" | "Thunder"
+  ) => {
     try {
       // Optimistic update
-      let newReactsCount = localReactsCount
-      let newReactions = { ...localReactions }
-      
+      let newReactsCount = localReactsCount;
+      let newReactions = { ...localReactions };
+
       // If user already reacted with this type, remove it
       if (userReaction === reactionType) {
-        newReactsCount = Math.max(0, newReactsCount - 1)
-        newReactions[reactionType] = Math.max(0, newReactions[reactionType] - 1)
-        setUserReaction(null)
+        newReactsCount = Math.max(0, newReactsCount - 1);
+        newReactions[reactionType] = Math.max(
+          0,
+          newReactions[reactionType] - 1
+        );
+        setUserReaction(null);
       } else {
         // If user had no reaction before, increment count
         if (!userReaction) {
-          newReactsCount = newReactsCount + 1
-          newReactions[reactionType] = newReactions[reactionType] + 1
+          newReactsCount = newReactsCount + 1;
+          newReactions[reactionType] = newReactions[reactionType] + 1;
         } else {
           // User had different reaction, decrement old and increment new
-          newReactions[userReaction as keyof typeof newReactions] = Math.max(0, newReactions[userReaction as keyof typeof newReactions] - 1)
-          newReactions[reactionType] = newReactions[reactionType] + 1
+          newReactions[userReaction as keyof typeof newReactions] = Math.max(
+            0,
+            newReactions[userReaction as keyof typeof newReactions] - 1
+          );
+          newReactions[reactionType] = newReactions[reactionType] + 1;
         }
-        setUserReaction(reactionType)
+        setUserReaction(reactionType);
       }
-      
-      setLocalReactsCount(newReactsCount)
-      setLocalReactions(newReactions)
-      
+
+      setLocalReactsCount(newReactsCount);
+      setLocalReactions(newReactions);
+
       // Make API call
-      const updatedPost = await reactToPost(id, reactionType)
-      
+      const updatedPost = await reactToPost(id, reactionType);
+
       // Update with server response
-      setLocalReactsCount(updatedPost.reacts_count || 0)
-      setUserReaction(updatedPost.user_reaction || null)
+      setLocalReactsCount(updatedPost.reacts_count || 0);
+      setUserReaction(updatedPost.user_reaction || null);
       if (updatedPost.reactions) {
         setLocalReactions({
           Thunder: updatedPost.reactions.Thunder || 0,
           Love: updatedPost.reactions.Love || 0,
-          Dislike: updatedPost.reactions.Dislike || 0
-        })
+          Dislike: updatedPost.reactions.Dislike || 0,
+        });
       }
-      
+
       // Notify parent component
       if (onUpdate) {
-        onUpdate(updatedPost)
+        onUpdate(updatedPost);
       }
 
       // Show success toast
       const reactionNames = {
-        Love: 'loved',
-        Dislike: 'disliked',
-        Thunder: 'thundered'
-      }
-      
+        Love: "loved",
+        Dislike: "disliked",
+        Thunder: "thundered",
+      };
+
       if (userReaction === reactionType) {
         // Removed reaction
         toast.info(`Removed your ${reactionType.toLowerCase()} reaction`, {
           duration: 2000,
-        })
+        });
       } else {
         // Added reaction
         toast.success(`You ${reactionNames[reactionType]} this post!`, {
           duration: 2000,
-        })
+        });
       }
     } catch (error) {
-      console.error('Error reacting to post:', error)
+      console.error("Error reacting to post:", error);
       // Revert optimistic update on error
-      setLocalReactsCount(reacts_count || 0)
-      setUserReaction(user_reaction || null)
+      setLocalReactsCount(reacts_count || 0);
+      setUserReaction(user_reaction || null);
       setLocalReactions({
         Thunder: reactions?.Thunder || 0,
         Love: reactions?.Love || 0,
-        Dislike: reactions?.Dislike || 0
-      })
+        Dislike: reactions?.Dislike || 0,
+      });
       toast.error("Failed to update reaction", {
         description: "Please try again",
         duration: 3000,
-      })
+      });
     }
-  }
+  };
 
   const handleSave = async () => {
     try {
-      const newSavedState = !localIsSaved
-      setLocalIsSaved(newSavedState)
-      
+      const newSavedState = !localIsSaved;
+      setLocalIsSaved(newSavedState);
+
       // Update saves count optimistically
-      const newSavesCount = newSavedState ? localSavesCount + 1 : Math.max(0, localSavesCount - 1)
-      setLocalSavesCount(newSavesCount)
-      
-      const updatedPost = await savePost(id)
-      setLocalIsSaved(updatedPost.is_saved || false)
-      setLocalSavesCount(updatedPost.saves_count || 0)
-      
+      const newSavesCount = newSavedState
+        ? localSavesCount + 1
+        : Math.max(0, localSavesCount - 1);
+      setLocalSavesCount(newSavesCount);
+
+      const updatedPost = await savePost(id);
+      setLocalIsSaved(updatedPost.is_saved || false);
+      setLocalSavesCount(updatedPost.saves_count || 0);
+
       if (onUpdate) {
-        onUpdate(updatedPost)
+        onUpdate(updatedPost);
       }
 
       // Show toast notification
@@ -349,272 +367,282 @@ export default function Card({
         toast.success("Post saved!", {
           description: "You can find saved posts in your profile",
           duration: 3000,
-        })
+        });
       } else {
         toast.info("Post unsaved", {
           duration: 2000,
-        })
+        });
       }
     } catch (error) {
-      console.error('Error saving post:', error)
-      setLocalIsSaved(is_saved || false) // Revert on error
-      setLocalSavesCount(saves_count || 0)
+      console.error("Error saving post:", error);
+      setLocalIsSaved(is_saved || false); // Revert on error
+      setLocalSavesCount(saves_count || 0);
       toast.error("Failed to save post", {
         description: "Please try again",
         duration: 3000,
-      })
+      });
     }
-  }
+  };
 
   const handleShare = async () => {
     // If already shared, just copy link to clipboard without API call
     if (localIsShared) {
       try {
-        const postUrl = `${window.location.origin}/community/post/${id}`
-        await navigator.clipboard.writeText(postUrl)
+        const postUrl = `${window.location.origin}/community/post/${id}`;
+        await navigator.clipboard.writeText(postUrl);
         toast.success("Link copied to clipboard!", {
           duration: 2000,
-        })
+        });
       } catch (error) {
-        console.error('Error copying to clipboard:', error)
+        console.error("Error copying to clipboard:", error);
         toast.error("Failed to copy link", {
           duration: 2000,
-        })
+        });
       }
-      return
+      return;
     }
 
     try {
       // Optimistic update
-      setLocalIsShared(true)
-      setLocalSharesCount(localSharesCount + 1)
-      
-      const updatedPost = await sharePost(id)
-      setLocalIsShared(updatedPost.is_shared || false)
-      setLocalSharesCount(updatedPost.shares_count || 0)
-      
+      setLocalIsShared(true);
+      setLocalSharesCount(localSharesCount + 1);
+
+      const updatedPost = await sharePost(id);
+      setLocalIsShared(updatedPost.is_shared || false);
+      setLocalSharesCount(updatedPost.shares_count || 0);
+
       if (onUpdate) {
-        onUpdate(updatedPost)
+        onUpdate(updatedPost);
       }
 
       // Copy link to clipboard
-      const postUrl = `${window.location.origin}/community/post/${id}`
-      await navigator.clipboard.writeText(postUrl)
-      
+      const postUrl = `${window.location.origin}/community/post/${id}`;
+      await navigator.clipboard.writeText(postUrl);
+
       toast.success("Post shared and link copied!", {
         description: "The link has been copied to your clipboard",
         duration: 3000,
-      })
+      });
     } catch (error) {
-      console.error('Error sharing post:', error)
-      setLocalIsShared(is_shared || false) // Revert on error
-      setLocalSharesCount(shares_count || 0)
+      console.error("Error sharing post:", error);
+      setLocalIsShared(is_shared || false); // Revert on error
+      setLocalSharesCount(shares_count || 0);
       toast.error("Failed to share post", {
         description: "Please try again",
         duration: 3000,
-      })
+      });
     }
-  }
+  };
 
   const handleComment = async () => {
-    if (!newComment.trim() || isCommenting) return
+    if (!newComment.trim() || isCommenting) return;
 
-    setIsCommenting(true)
+    setIsCommenting(true);
     try {
-      const commentData = { content: newComment.trim() }
-      const newCommentResponse = await commentOnPost(id, commentData)
-      
+      const commentData = { content: newComment.trim() };
+      const newCommentResponse = await commentOnPost(id, commentData);
+
       // Add the new comment to the local state
-      setLocalComments(prev => [...prev, newCommentResponse])
-      setNewComment("")
-      
+      setLocalComments((prev) => [...prev, newCommentResponse]);
+      setNewComment("");
+
       toast.success("Comment posted successfully!", {
         duration: 2000,
-      })
+      });
     } catch (error) {
-      console.error('Error posting comment:', error)
+      console.error("Error posting comment:", error);
       toast.error("Failed to post comment", {
         description: "Please try again",
         duration: 3000,
-      })
+      });
     } finally {
-      setIsCommenting(false)
+      setIsCommenting(false);
     }
-  }
+  };
 
   const handleEdit = async () => {
-    if (!editContent.trim() || isSaving) return
+    if (!editContent.trim() || isSaving) return;
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       const editData: any = {
         title: editTitle.trim() || undefined,
         content: editContent.trim(),
-      }
-      
+      };
+
       // Handle image editing
       if (editImage) {
-        editData.image = editImage
+        editData.image = editImage;
       } else if (!keepCurrentImage) {
         // User wants to remove the current image
-        editData.image = null
+        editData.image = null;
       }
       // If keepCurrentImage is true and no new image, don't include image in the request
-      
-      const updatedPost = await editPost(id, editData)
-      
+
+      const updatedPost = await editPost(id, editData);
+
       // Update local state with edited content
       if (onUpdate) {
-        onUpdate(updatedPost)
+        onUpdate(updatedPost);
       }
-      
-      setIsEditing(false)
+
+      setIsEditing(false);
       toast.success("Post updated successfully!", {
         duration: 2000,
-      })
+      });
     } catch (error) {
-      console.error('Error editing post:', error)
+      console.error("Error editing post:", error);
       toast.error("Failed to update post", {
         description: "Please try again",
         duration: 3000,
-      })
+      });
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleCancelEdit = () => {
-    setIsEditing(false)
-    setEditTitle(title || "")
-    setEditContent(content)
-    setEditImage(null)
-    setEditImagePreview(null)
-    setKeepCurrentImage(true)
-  }
+    setIsEditing(false);
+    setEditTitle(title || "");
+    setEditContent(content);
+    setEditImage(null);
+    setEditImagePreview(null);
+    setKeepCurrentImage(true);
+  };
 
   const handleDelete = async () => {
-    setIsDeleting(true)
+    setIsDeleting(true);
     try {
-      await deletePost(id)
+      await deletePost(id);
       toast.success("Post deleted successfully!", {
         duration: 2000,
-      })
-      
+      });
+
       // Notify parent component to remove this post from the list
       if (onDelete) {
-        onDelete(id)
+        onDelete(id);
       }
     } catch (error) {
-      console.error('Error deleting post:', error)
+      console.error("Error deleting post:", error);
       toast.error("Failed to delete post", {
         description: "Please try again",
         duration: 3000,
-      })
+      });
     } finally {
-      setIsDeleting(false)
-      setShowDeleteDialog(false)
+      setIsDeleting(false);
+      setShowDeleteDialog(false);
     }
-  }
+  };
 
   const getReactionCountsText = () => {
-    if (totalReactions === 0) return ""
-    if (totalReactions === 1) return "1 reaction"
-    return `${totalReactions} reactions`
-  }
+    if (totalReactions === 0) return "";
+    if (totalReactions === 1) return "1 reaction";
+    return `${totalReactions} reactions`;
+  };
 
   const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000)
-    
-    if (diffInSeconds < 60) return 'Just now'
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`
-    return date.toLocaleDateString()
-  }
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return "Just now";
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 604800)
+      return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    return date.toLocaleDateString();
+  };
 
   const handleTimestampClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    window.open(`/community/post/${id}`, '_self')
-  }
+    e.stopPropagation();
+    window.open(`/community/post/${id}`, "_self");
+  };
 
   // Comment edit/delete handlers
   const handleEditComment = (comment: Comment) => {
-    setEditingCommentId(comment.id)
-    setEditCommentContent(comment.content)
-  }
+    setEditingCommentId(comment.id);
+    setEditCommentContent(comment.content);
+  };
 
   const handleSaveEditComment = async () => {
-    if (!editingCommentId || !editCommentContent.trim() || isEditingComment) return
+    if (!editingCommentId || !editCommentContent.trim() || isEditingComment)
+      return;
 
-    setIsEditingComment(true)
+    setIsEditingComment(true);
     try {
-      const updatedComment = await editComment(editingCommentId, editCommentContent.trim())
-      
+      const updatedComment = await editComment(
+        editingCommentId,
+        editCommentContent.trim()
+      );
+
       // Update the comment in local state
-      setLocalComments(prev => prev.map(comment => 
-        comment.id === editingCommentId ? updatedComment : comment
-      ))
-      
-      setEditingCommentId(null)
-      setEditCommentContent("")
-      
+      setLocalComments((prev) =>
+        prev.map((comment) =>
+          comment.id === editingCommentId ? updatedComment : comment
+        )
+      );
+
+      setEditingCommentId(null);
+      setEditCommentContent("");
+
       toast.success("Comment updated successfully!", {
         duration: 2000,
-      })
+      });
     } catch (error) {
-      console.error('Error editing comment:', error)
+      console.error("Error editing comment:", error);
       toast.error("Failed to update comment", {
         description: "Please try again",
         duration: 3000,
-      })
+      });
     } finally {
-      setIsEditingComment(false)
+      setIsEditingComment(false);
     }
-  }
+  };
 
   const handleCancelEditComment = () => {
-    setEditingCommentId(null)
-    setEditCommentContent("")
-  }
+    setEditingCommentId(null);
+    setEditCommentContent("");
+  };
 
   const handleDeleteComment = async () => {
-    if (!deletingCommentId || isDeletingComment) return
+    if (!deletingCommentId || isDeletingComment) return;
 
-    setIsDeletingComment(true)
+    setIsDeletingComment(true);
     try {
-      await deleteComment(deletingCommentId)
-      
+      await deleteComment(deletingCommentId);
+
       // Remove the comment from local state
-      setLocalComments(prev => prev.filter(comment => comment.id !== deletingCommentId))
-      
+      setLocalComments((prev) =>
+        prev.filter((comment) => comment.id !== deletingCommentId)
+      );
+
       toast.success("Comment deleted successfully!", {
         duration: 2000,
-      })
+      });
     } catch (error) {
-      console.error('Error deleting comment:', error)
+      console.error("Error deleting comment:", error);
       toast.error("Failed to delete comment", {
         description: "Please try again",
         duration: 3000,
-      })
+      });
     } finally {
-      setIsDeletingComment(false)
-      setShowDeleteCommentDialog(false)
-      setDeletingCommentId(null)
+      setIsDeletingComment(false);
+      setShowDeleteCommentDialog(false);
+      setDeletingCommentId(null);
     }
-  }
+  };
 
   // Check if current user is the comment author
   const isCommentAuthor = (comment: Comment) => {
-    return currentUser === comment.author.username
-  }
+    return currentUser === comment.author.username;
+  };
 
   // Get display info for the post author
-  const authorDisplayInfo = getAuthorDisplayInfo()
+  const authorDisplayInfo = getAuthorDisplayInfo();
 
   return (
-    <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-xl p-6 shadow-lg border border-white border-opacity-30">
+    <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-xl p-6 shadow-lg border border-white border-opacity-30 dark:bg-[#C7CCDB]">
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center space-x-3">
@@ -624,45 +652,54 @@ export default function Card({
             className="w-10 h-10 rounded-full object-cover"
           />
           <div>
-            <p className="font-semibold text-gray-900">{authorDisplayInfo.fullName}</p>
-            <p className="text-sm text-gray-600">@{authorDisplayInfo.username}</p>
+            <p className="font-semibold text-gray-900">
+              {authorDisplayInfo.fullName}
+            </p>
             <p className="text-sm text-gray-600">
-              <span 
+              @{authorDisplayInfo.username}
+            </p>
+            <p className="text-sm text-gray-600">
+              <span
                 className="cursor-pointer hover:text-violet-600 hover:underline"
                 onClick={handleTimestampClick}
               >
                 {formatTimeAgo(created_at)}
               </span>
-              {trend && <span className="ml-2 px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">Trending</span>}
+              {trend && (
+                <span className="ml-2 px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full">
+                  Trending
+                </span>
+              )}
             </p>
           </div>
         </div>
-        
+
         {isAuthor && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
+                className = "dark:text-black dark:hover:bg-[#b9b8b8]"
                 onClick={(e) => e.stopPropagation()}
               >
                 <MoreHorizontal className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={(e) => {
-                  e.stopPropagation()
-                  setIsEditing(true)
+                  e.stopPropagation();
+                  setIsEditing(true);
                 }}
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Post
               </DropdownMenuItem>
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 onClick={(e) => {
-                  e.stopPropagation()
-                  setShowDeleteDialog(true)
+                  e.stopPropagation();
+                  setShowDeleteDialog(true);
                 }}
                 className="text-red-600 focus:text-red-600"
               >
@@ -681,25 +718,25 @@ export default function Card({
             value={editTitle}
             onChange={(e) => setEditTitle(e.target.value)}
             placeholder="Post title (optional)"
-            className="bg-white bg-opacity-50"
+            className="bg-white bg-opacity-50 dark:text-black"
           />
           <Textarea
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
             placeholder="What's your content?"
             rows={4}
-            className="bg-white bg-opacity-50"
+            className="bg-white bg-opacity-50 dark:text-black"
           />
-          
+
           {/* Image editing section */}
           <div className="space-y-3">
-            <label className="text-sm font-medium">Image</label>
-            
+            <label className="text-sm font-medium dark:text-black">Image</label>
+
             {/* Show image with red X button if there's an image (current or new) */}
             {((image && keepCurrentImage) || editImagePreview) && (
               <div className="relative inline-block">
                 <img
-                  src={editImagePreview || image || ''}
+                  src={editImagePreview || image || ""}
                   alt={editImagePreview ? "New image preview" : "Current image"}
                   className="max-w-sm max-h-64 rounded-lg border border-white border-opacity-30 object-cover"
                 />
@@ -708,17 +745,17 @@ export default function Card({
                   variant="destructive"
                   size="sm"
                   onClick={() => {
-                    setEditImage(null)
-                    setEditImagePreview(null)
-                    setKeepCurrentImage(false)
+                    setEditImage(null);
+                    setEditImagePreview(null);
+                    setKeepCurrentImage(false);
                   }}
-                  className="absolute top-2 right-2"
+                  className="absolute top-2 right-2 "
                 >
                   <X className="w-4 h-4" />
                 </Button>
               </div>
             )}
-            
+
             {/* Show file input when no image is displayed */}
             {(!image || !keepCurrentImage) && !editImagePreview && (
               <Input
@@ -726,22 +763,22 @@ export default function Card({
                 type="file"
                 accept="image/*"
                 onChange={handleEditImageChange}
-                className="bg-white bg-opacity-50"
+                className="bg-white bg-opacity-50 dark:text-black"
               />
             )}
           </div>
-          
+
           <div className="flex gap-2">
-            <Button 
-              onClick={handleEdit} 
+            <Button
+              onClick={handleEdit}
               disabled={isSaving || !editContent.trim()}
               className="flex items-center gap-2"
             >
               <Save className="w-4 h-4" />
-              {isSaving ? 'Saving...' : 'Save'}
+              {isSaving ? "Saving..." : "Save"}
             </Button>
-            <Button 
-              onClick={handleCancelEdit} 
+            <Button
+              onClick={handleCancelEdit}
               variant="outline"
               className="flex items-center gap-2"
             >
@@ -752,18 +789,22 @@ export default function Card({
         </div>
       ) : (
         <div className="mb-4">
-          {title && <h3 className="text-lg font-semibold mb-2 text-gray-900">{title}</h3>}
+          {title && (
+            <h3 className="text-lg font-semibold mb-2 text-gray-900">
+              {title}
+            </h3>
+          )}
           <p className="text-gray-800 mb-3">{content}</p>
-          
+
           {/* Image if present */}
           {image && (
-            <img 
-              src={image} 
+            <img
+              src={image}
               alt="Post image"
               className="w-full rounded-lg mb-3 max-h-96 object-cover"
             />
           )}
-          
+
           {/* Tags */}
           {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-3">
@@ -777,15 +818,20 @@ export default function Card({
               ))}
             </div>
           )}
-          
+
           {/* Post Type Badge */}
           <div className="mb-3">
-            <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-              post_type === 'blog' ? 'bg-blue-100 text-blue-800' :
-              post_type === 'question' ? 'bg-green-100 text-green-800' :
-              post_type === 'event' ? 'bg-purple-100 text-purple-800' :
-              'bg-gray-100 text-gray-800'
-            }`}>
+            <span
+              className={`inline-block px-2 py-1 text-xs rounded-full ${
+                post_type === "blog"
+                  ? "bg-blue-100 text-blue-800"
+                  : post_type === "question"
+                  ? "bg-green-100 text-green-800"
+                  : post_type === "event"
+                  ? "bg-purple-100 text-purple-800"
+                  : "bg-gray-100 text-gray-800"
+              }`}
+            >
               {post_type.charAt(0).toUpperCase() + post_type.slice(1)}
             </span>
           </div>
@@ -797,26 +843,52 @@ export default function Card({
         {/* Reactions */}
         <div className="flex items-center space-x-1">
           {Object.entries(reactionIcons).map(([reaction, Icon]) => {
-            const isActive = userReaction === reaction
-            const count = localReactions[reaction as keyof typeof localReactions]
-            
+            const isActive = userReaction === reaction;
+            const count =
+              localReactions[reaction as keyof typeof localReactions];
+
+            // Define colors for each reaction type
+            const getReactionColors = (
+              reactionType: string,
+              active: boolean
+            ) => {
+              switch (reactionType) {
+                case "Thunder":
+                  return active
+                    ? "text-violet-600"
+                    : "text-gray-600 hover:text-violet-600";
+                case "Love":
+                  return active
+                    ? "text-red-600"
+                    : "text-gray-600 hover:text-red-600";
+                case "Dislike":
+                  return active
+                    ? "text-blue-600"
+                    : "text-gray-600 hover:text-blue-600";
+                default:
+                  return "text-gray-600";
+              }
+            };
+
             return (
               <Button
                 key={reaction}
                 variant="ghost"
                 size="sm"
                 onClick={(e) => {
-                  e.stopPropagation()
-                  handleReaction(reaction as 'Love' | 'Dislike' | 'Thunder')
+                  e.stopPropagation();
+                  handleReaction(reaction as "Love" | "Dislike" | "Thunder");
                 }}
-                className={`flex items-center space-x-1 ${
-                  isActive ? 'text-violet-600 bg-violet-100' : 'text-gray-600 hover:text-violet-600'
-                }`}
+                className={`flex items-center space-x-1 hover:bg-transparent ${getReactionColors(
+                  reaction,
+                  isActive
+                )}`}
+                style={{ boxShadow: "none" }}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'fill-current' : ''}`} />
+                <Icon className={`w-4 h-4 ${isActive ? "fill-current" : ""}`} />
                 {count > 0 && <span className="text-sm">{count}</span>}
               </Button>
-            )
+            );
           })}
         </div>
 
@@ -826,41 +898,56 @@ export default function Card({
             variant="ghost"
             size="sm"
             onClick={(e) => {
-              e.stopPropagation()
-              setShowComments(!showComments)
+              e.stopPropagation();
+              setShowComments(!showComments);
             }}
-            className="flex items-center space-x-1 text-gray-600 hover:text-violet-600"
+            className="flex items-center space-x-1 text-gray-600 hover:text-violet-600 hover:bg-transparent"
+            style={{ boxShadow: "none" }}
           >
             <MessageCircle className="w-4 h-4" />
             <span className="text-sm">{commentsCount}</span>
           </Button>
-          
+
           <Button
             variant="ghost"
             size="sm"
             onClick={(e) => {
-              e.stopPropagation()
-              handleShare()
+              e.stopPropagation();
+              handleShare();
             }}
-            className="flex items-center space-x-1 text-gray-600 hover:text-violet-600"
+            className={`flex items-center space-x-1 hover:bg-transparent ${
+              localIsShared
+                ? "text-green-600"
+                : "text-gray-600 hover:text-green-600"
+            }`}
+            style={{ boxShadow: "none" }}
           >
             <Share2 className="w-4 h-4" />
-            {localSharesCount > 0 && <span className="text-sm">{localSharesCount}</span>}
+            {localSharesCount > 0 && (
+              <span className="text-sm">{localSharesCount}</span>
+            )}
           </Button>
-          
+
           <Button
             variant="ghost"
             size="sm"
             onClick={(e) => {
-              e.stopPropagation()
-              handleSave()
+              e.stopPropagation();
+              handleSave();
             }}
-            className={`flex items-center space-x-1 ${
-              localIsSaved ? 'text-violet-600' : 'text-gray-600 hover:text-violet-600'
+            className={`flex items-center space-x-1 hover:bg-transparent ${
+              localIsSaved
+                ? "text-yellow-600"
+                : "text-gray-600 hover:text-yellow-600"
             }`}
+            style={{ boxShadow: "none" }}
           >
-            <Bookmark className={`w-4 h-4 ${localIsSaved ? 'fill-current' : ''}`} />
-            {localSavesCount > 0 && <span className="text-sm">{localSavesCount}</span>}
+            <Bookmark
+              className={`w-4 h-4 ${localIsSaved ? "fill-current" : ""}`}
+            />
+            {localSavesCount > 0 && (
+              <span className="text-sm">{localSavesCount}</span>
+            )}
           </Button>
         </div>
       </div>
@@ -874,13 +961,19 @@ export default function Card({
                 <span className="font-medium">{getReactionCountsText()}</span>
               )}
               {commentsCount > 0 && (
-                <span>{commentsCount} comment{commentsCount !== 1 ? 's' : ''}</span>
+                <span>
+                  {commentsCount} comment{commentsCount !== 1 ? "s" : ""}
+                </span>
               )}
               {localSharesCount > 0 && (
-                <span>{localSharesCount} share{localSharesCount !== 1 ? 's' : ''}</span>
+                <span>
+                  {localSharesCount} share{localSharesCount !== 1 ? "s" : ""}
+                </span>
               )}
               {localSavesCount > 0 && (
-                <span>{localSavesCount} save{localSavesCount !== 1 ? 's' : ''}</span>
+                <span>
+                  {localSavesCount} save{localSavesCount !== 1 ? "s" : ""}
+                </span>
               )}
             </div>
           </div>
@@ -903,23 +996,23 @@ export default function Card({
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Write a comment..."
-                className="flex-1 bg-white bg-opacity-50"
+                className="flex-1 bg-white bg-opacity-50 text-black"
                 onKeyPress={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    handleComment()
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleComment();
                   }
                 }}
               />
               <Button
                 onClick={(e) => {
-                  e.stopPropagation()
-                  handleComment()
+                  e.stopPropagation();
+                  handleComment();
                 }}
                 disabled={!newComment.trim() || isCommenting}
                 size="sm"
               >
-                {isCommenting ? 'Posting...' : 'Post'}
+                {isCommenting ? "Posting..." : "Post"}
               </Button>
             </div>
           </div>
@@ -929,25 +1022,36 @@ export default function Card({
             {localComments.map((comment) => (
               <div key={comment.id} className="flex items-start space-x-3">
                 <ProfileImage
-                  src={comment.author.profile_picture || comment.author.avatar || comment.author.profile_image || `/placeholder-user.jpg`}
+                  src={
+                    comment.author.profile_picture ||
+                    comment.author.avatar ||
+                    comment.author.profile_image ||
+                    `/placeholder-user.jpg`
+                  }
                   alt={getFullName(comment.author)}
                   className="w-8 h-8 rounded-full object-cover"
                 />
                 <div className="flex-1 bg-white bg-opacity-30 rounded-lg p-3">
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-sm text-gray-900">{getFullName(comment.author)}</span>
-                      <span className="text-xs text-gray-600">@{comment.author.username}</span>
+                      <span className="font-semibold text-sm text-gray-900">
+                        {getFullName(comment.author)}
+                      </span>
+                      <span className="text-xs text-gray-600">
+                        @{comment.author.username}
+                      </span>
                       <span className="text-xs text-gray-500">•</span>
-                      <span className="text-xs text-gray-500">{formatTimeAgo(comment.created_at)}</span>
+                      <span className="text-xs text-gray-500">
+                        {formatTimeAgo(comment.created_at)}
+                      </span>
                     </div>
-                    
+
                     {/* Comment Actions Menu - Only show for comment author */}
                     {isCommentAuthor(comment) && (
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button 
-                            variant="ghost" 
+                          <Button
+                            variant="ghost"
                             size="sm"
                             onClick={(e) => e.stopPropagation()}
                             className="h-6 w-6 p-0"
@@ -956,20 +1060,20 @@ export default function Card({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={(e) => {
-                              e.stopPropagation()
-                              handleEditComment(comment)
+                              e.stopPropagation();
+                              handleEditComment(comment);
                             }}
                           >
                             <Edit className="w-4 h-4 mr-2" />
                             Edit Comment
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={(e) => {
-                              e.stopPropagation()
-                              setDeletingCommentId(comment.id)
-                              setShowDeleteCommentDialog(true)
+                              e.stopPropagation();
+                              setDeletingCommentId(comment.id);
+                              setShowDeleteCommentDialog(true);
                             }}
                             className="text-red-600 focus:text-red-600"
                           >
@@ -980,7 +1084,7 @@ export default function Card({
                       </DropdownMenu>
                     )}
                   </div>
-                  
+
                   {/* Comment Content or Edit Form */}
                   {editingCommentId === comment.id ? (
                     <div className="space-y-2">
@@ -1003,9 +1107,11 @@ export default function Card({
                         <Button
                           size="sm"
                           onClick={handleSaveEditComment}
-                          disabled={!editCommentContent.trim() || isEditingComment}
+                          disabled={
+                            !editCommentContent.trim() || isEditingComment
+                          }
                         >
-                          {isEditingComment ? 'Saving...' : 'Save'}
+                          {isEditingComment ? "Saving..." : "Save"}
                         </Button>
                       </div>
                     </div>
@@ -1025,50 +1131,55 @@ export default function Card({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Post</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this post? This action cannot be undone.
+              Are you sure you want to delete this post? This action cannot be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleting}
               className="bg-red-600 hover:bg-red-700"
             >
-              {isDeleting ? 'Deleting...' : 'Delete'}
+              {isDeleting ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
       {/* Delete Comment Confirmation Dialog */}
-      <AlertDialog open={showDeleteCommentDialog} onOpenChange={setShowDeleteCommentDialog}>
+      <AlertDialog
+        open={showDeleteCommentDialog}
+        onOpenChange={setShowDeleteCommentDialog}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Comment</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this comment? This action cannot be undone.
+              Are you sure you want to delete this comment? This action cannot
+              be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel 
+            <AlertDialogCancel
               onClick={() => {
-                setShowDeleteCommentDialog(false)
-                setDeletingCommentId(null)
+                setShowDeleteCommentDialog(false);
+                setDeletingCommentId(null);
               }}
             >
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={handleDeleteComment}
               disabled={isDeletingComment}
               className="bg-red-600 hover:bg-red-700"
             >
-              {isDeletingComment ? 'Deleting...' : 'Delete'}
+              {isDeletingComment ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
+  );
 }

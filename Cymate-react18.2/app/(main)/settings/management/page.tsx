@@ -2,7 +2,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import SecurityManagement from "./SecurityManagement"
-import TokenPricingTiers from "../../components/TokenPricingTiers"
+import TokenPricingTiers from "./TokenPricingTiers"
 
 
 export default function SettingsManagementPage() {

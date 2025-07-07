@@ -69,10 +69,7 @@ export default function LoginPage() {
         toast.success("Login Successful", {
           description: "Welcome back!",
         });
-        // Redirect to dashboard with slight delay to prevent race condition
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 150);
+        // Let RouteGuard handle the redirect to prevent race conditions
       }
     } catch (error) {
       toast.error("Login Failed", {

@@ -118,20 +118,20 @@ export default function PostDetailPage() {
         {loading ? (
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading post...</p>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-violet-500 dark:border-violet-400 mx-auto mb-4"></div>
+              <p className="text-gray-600 dark:text-gray-300">Loading post...</p>
             </div>
           </div>
         ) : error ? (
           <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
-            <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Oops!</h2>
-            <p className="text-gray-600 mb-6">{error}</p>
+            <AlertCircle className="w-16 h-16 text-red-500 dark:text-red-400 mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Oops!</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
             <div className="flex gap-4">
-              <Button onClick={() => router.push('/community')} variant="outline">
+              <Button onClick={() => router.push('/community')} variant="outline" className="dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-700" style={{ boxShadow: 'none' }}>
                 Back to Community
               </Button>
-              <Button onClick={fetchPost}>
+              <Button onClick={fetchPost} className="dark:bg-violet-600 dark:hover:bg-violet-700" style={{ boxShadow: 'none' }}>
                 Try Again
               </Button>
             </div>
@@ -207,17 +207,21 @@ export default function PostDetailPage() {
 
             {/* Related Posts or Actions */}
             <div className="max-w-2xl mx-auto text-center">
-              <p className="text-gray-600 mb-4">Enjoying this post?</p>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">Enjoying this post?</p>
               <div className="flex justify-center gap-4">
-                <Button onClick={handleShare} className="flex items-center gap-2" > Share Post </Button>
+                <Button onClick={handleShare} className="flex items-center gap-2 dark:bg-violet-600 dark:hover:bg-violet-700" style={{ boxShadow: 'none' }}> Share Post </Button>
                 <Button 
                   onClick={() => router.push('/community')}
                   variant="outline"
+                  className="dark:bg-slate-800 dark:text-white dark:border-slate-600 dark:hover:bg-slate-700"
+                  style={{ boxShadow: 'none' }}
                 >
                   Explore More Posts
                 </Button>
                 <Button 
                   onClick={() => router.push('/create')}
+                  className="dark:bg-violet-600 dark:hover:bg-violet-700"
+                  style={{ boxShadow: 'none' }}
                 >
                   Create Your Own Post
                 </Button>

@@ -4,15 +4,10 @@ import { useAuth } from "../../contexts/AuthContext";
 import BentoCard from "../components/BentoCard"
 import StreaksSection from "../components/StreaksSection"
 import Calendar from "../components/Calendar"
-import ThunderSpotlight from "../components/ThunderSpotlight"
 import SecurityTips from "../components/SecurityTips"
 import AnimatedAd from "../components/AnimatedAd"
-import OSINTInfoCard from "../components/OSINTInfoCard"
-import { FloatingToolsSection } from "../components/FloatingToolsSection"
 import NotificationsList from "../components/NotificationsList"
-import InboxSection from "../components/InboxSection"
-import InnovationStation from "../components/InnovationStation"
-import QuickScan from "../components/QuickScan"
+
 
 export default function Dashboard() {
   const { user, isLoading } = useAuth();
@@ -43,31 +38,7 @@ export default function Dashboard() {
       <StreaksSection />
 
       <BentoCard className="col-span-full">
-        <FloatingToolsSection />
-      </BentoCard>
-
-      <BentoCard className="col-span-full">
-        <QuickScan />
-      </BentoCard>
-
-      <BentoCard className="col-span-full">
-        <InnovationStation />
-      </BentoCard>
-
-      <BentoCard className="col-span-full">
         <NotificationsList />
-      </BentoCard>
-
-      <BentoCard className="col-span-full">
-        <InboxSection />
-      </BentoCard>
-
-      <BentoCard className="col-span-full">
-        <OSINTInfoCard />
-      </BentoCard>
-
-      <BentoCard className="col-span-full">
-        <ThunderSpotlight />
       </BentoCard>
 
       <BentoCard className="col-span-full">

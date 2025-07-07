@@ -1,4 +1,4 @@
-import TokenPricingTiers from "../components/TokenPricingTiers"
+import TokenPricingTiers from "../settings/management/TokenPricingTiers"
 
 export default function BillingPage() {
   return (

@@ -24,29 +24,28 @@ export default function RouteGuard({ children }: RouteGuardProps) {
       if (!isAuthenticated && !isPublicRoute) {
         // User is not authenticated and trying to access protected route
         setIsRedirecting(true);
-        setTimeout(() => {
-          router.push('/login');
-        }, 100);
+        router.push('/login');
       } else if (isAuthenticated && isPublicRoute && pathname !== '/verify-email') {
         // User is authenticated and trying to access auth pages (except verify-email for registration flow)
         setIsRedirecting(true);
-        setTimeout(() => {
+        // Perform a refresh when coming from login to ensure fresh state
+        if (pathname === '/login') {
+          window.location.href = '/dashboard';
+        } else {
           router.push('/dashboard');
-        }, 100);
+        }
       } else if (isAuthenticated && pathname === '/') {
         // User is authenticated and on root page, redirect to dashboard
         setIsRedirecting(true);
-        setTimeout(() => {
-          router.push('/dashboard');
-        }, 100);
+        window.location.href = '/dashboard';
       }
     }
   }, [isAuthenticated, isLoading, pathname, router, isRedirecting]);
 
-  // Reset redirecting state when pathname changes
+  // Reset redirecting state when pathname changes or auth state changes
   useEffect(() => {
     setIsRedirecting(false);
-  }, [pathname]);
+  }, [pathname, isAuthenticated]);
 
   // Show loading spinner while checking authentication or redirecting
   if (isLoading || isRedirecting) {

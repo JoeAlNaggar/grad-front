@@ -37,10 +37,11 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
-  const isOwnProfile = currentUser?.username === username
+  // Case-insensitive comparison for profile ownership check
+  const isOwnProfile = currentUser?.username?.toLowerCase() === (username as string)?.toLowerCase()
 
   useEffect(() => {
-    if (username) {
+    if (username && typeof username === 'string') {
       fetchProfile()
     }
   }, [username])
@@ -49,7 +50,22 @@ export default function ProfilePage() {
     try {
       setIsLoading(true)
       setError(null)
-      const profileData = await getUserProfile(username as string)
+      
+      // Validate username
+      if (!username || typeof username !== 'string') {
+        setError('Invalid username')
+        return
+      }
+      
+      // Convert username to lowercase for case-insensitive lookup
+      // This fixes the issue where "ashry" becomes "Ashry" in the URL
+      const normalizedUsername = username.toLowerCase().trim()
+      if (!normalizedUsername) {
+        setError('Invalid username')
+        return
+      }
+      
+      const profileData = await getUserProfile(normalizedUsername)
       setProfile(profileData)
     } catch (error: any) {
       console.error('Error fetching profile:', error)
@@ -76,7 +92,7 @@ export default function ProfilePage() {
   }
 
   const handleEditProfile = () => {
-    router.push('/settings/profile-setup')
+    router.push('/settings?tab=profile-setup')
   }
 
   if (isLoading) {
@@ -110,18 +126,17 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+<div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">      <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <Button 
+        <div className="flex justify-end mb-8">
+          {/* <Button 
             onClick={() => router.back()} 
             variant="ghost" 
             className="flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
-          </Button>
+          </Button> */}
           
           {isOwnProfile && (
             <Button onClick={handleEditProfile} className="flex items-center gap-2">
@@ -132,8 +147,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Profile Header Card */}
-        <Card className="mb-8 overflow-hidden">
-          <div className="h-32 bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500"></div>
+<Card className="mb-8 overflow-hidden dark:bg-slate-800 dark:border-slate-700">          <div className="h-32 bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500"></div>
           <CardContent className="p-8 relative">
             <div className="flex flex-col md:flex-row items-start gap-6">
               {/* Profile Avatar */}
@@ -152,21 +166,21 @@ export default function ProfilePage() {
               {/* Profile Info */}
               <div className="flex-1 space-y-4">
                 <div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                    {profile.first_name} {profile.last_name}
+<h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+                      {profile.first_name} {profile.last_name}
                   </h1>
-                  <p className="text-lg text-gray-600">@{profile.username}</p>
+                  <p className="text-lg text-gray-600 dark:text-gray-400">@{profile.username}</p>
                 </div>
 
                 {/* Job Info */}
                 {profile.job_title && (
                   <div className="flex items-center gap-2 text-lg">
                     <Briefcase className="w-5 h-5 text-purple-600" />
-                    <span className="font-medium">{profile.job_title}</span>
+                    <span className="font-medium dark:text-white">{profile.job_title}</span>
                     {profile.years_of_experience > 0 && (
                       <>
-                        <span className="text-gray-400">•</span>
-                        <span className="text-gray-600">{profile.years_of_experience} years experience</span>
+                        <span className="text-gray-400 dark:text-white">•</span>
+                        <span className="text-gray-600 dark:text-white ">{profile.years_of_experience} years experience</span>
                       </>
                     )}
                   </div>
@@ -174,13 +188,12 @@ export default function ProfilePage() {
 
                 {/* Job Status */}
                 {profile.job_status && (
-                  <Badge variant="secondary" className="w-fit">
-                    {profile.job_status}
+<Badge variant="secondary" className="w-fit dark:bg-slate-700 dark:text-white">                    {profile.job_status}
                   </Badge>
                 )}
 
                 {/* Contact Info */}
-                <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-white">
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
                     <span>{profile.email}</span>
@@ -196,7 +209,7 @@ export default function ProfilePage() {
                 {/* Brief */}
                 {profile.brief && (
                   <div className="mt-4">
-                    <p className="text-gray-700 leading-relaxed">{profile.brief}</p>
+                    <p className="text-gray-700 leading-relaxed dark:text-white">{profile.brief}</p>
                   </div>
                 )}
               </div>
@@ -204,8 +217,8 @@ export default function ProfilePage() {
               {/* Stats */}
               <div className="flex gap-6 md:gap-8">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{profile.posts_count}</div>
-                  <div className="text-sm text-gray-600">Posts</div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">{profile.posts_count}</div>
+                  <div className="text-sm text-gray-600 dark:text-white">Posts</div>
                 </div>
               </div>
             </div>
@@ -244,17 +257,17 @@ export default function ProfilePage() {
                           </Avatar>
                           <div>
                             <p className="font-medium">{profile.first_name} {profile.last_name}</p>
-                            <p className="text-sm text-gray-600">@{profile.username}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">@{profile.username}</p>
                           </div>
                         </div>
-                        <Badge variant="outline">{post.post_type}</Badge>
+                        <Badge variant="outline" className = "dark:bg-slate-700 dark:text-white">{post.post_type}</Badge>
                       </div>
                       {post.title && (
                         <CardTitle className="text-xl">{post.title}</CardTitle>
                       )}
                     </CardHeader>
                     <CardContent>
-                      <p className="text-gray-700 leading-relaxed mb-4">{post.content}</p>
+                      <p className="text-gray-700 leading-relaxed mb-4 dark:text-white">{post.content}</p>
                       
                       {post.image && (
                         <div className="mb-4 rounded-lg overflow-hidden">
@@ -295,20 +308,20 @@ export default function ProfilePage() {
                             <span>{post.reactions?.Dislike || 0}</span>
                           </div>
                           
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 dark:text-gray-400">
                             <MessageCircle className="w-4 h-4" />
                             <span>{post.comments_count}</span>
                           </div>
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 dark:text-gray-400">
                             <Share2 className="w-4 h-4" />
                             <span>{post.shares_count}</span>
                           </div>
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1 dark:text-gray-400">
                             <Bookmark className="w-4 h-4" />
                             <span>{post.saves_count}</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 dark:text-gray-400">
                           <Calendar className="w-4 h-4" />
                           <span>{formatDate(post.created_at)}</span>
                         </div>
@@ -343,7 +356,7 @@ export default function ProfilePage() {
               <CardContent className="space-y-6">
                 {/* Professional Info */}
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-3">Professional Information</h3>
+                  <h3 className="font-medium text-gray-900 mb-3 dark:text-gray-400">Professional Information</h3>
                   <div className="space-y-3">
                     {profile.job_title && (
                       <div className="flex items-center gap-3">
@@ -372,7 +385,7 @@ export default function ProfilePage() {
 
                 {/* Contact Information */}
                 <div>
-                  <h3 className="font-medium text-gray-900 mb-3">Contact Information</h3>
+                  <h3 className="font-medium text-gray-900 mb-3 dark:text-gray-400">Contact Information</h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
                       <Mail className="w-4 h-4 text-gray-400" />
@@ -391,8 +404,8 @@ export default function ProfilePage() {
                   <>
                     <Separator />
                     <div>
-                      <h3 className="font-medium text-gray-900 mb-3">Bio</h3>
-                      <p className="text-gray-700 leading-relaxed">{profile.brief}</p>
+                      <h3 className="font-medium text-gray-900 mb-3 dark:text-gray-400">Bio</h3>
+                      <p className="text-gray-700 leading-relaxed dark:text-white">{profile.brief}</p>
                     </div>
                   </>
                 )}

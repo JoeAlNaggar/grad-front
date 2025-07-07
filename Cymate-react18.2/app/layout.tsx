@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "CyMate",
-  description: "Advanced cybersecurity platform for professionals",
+  description: "All-in-one cybersecurity platform ",
 };
 
 export default function RootLayout({

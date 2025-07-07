@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, Search, User, X, Menu, LogOut, Settings, Crown } from "lucide-react"
+import { Bell, Search, User, X, Menu, LogOut, Settings, Crown, CreditCard  } from "lucide-react"
 import NightModeToggle from "./NightModeToggle"
 import Link from "next/link"
 import Logo from "./Logo"
@@ -318,7 +318,7 @@ export default function Navbar() {
                         <span className="text-gray-500 dark:text-gray-400">Toolkit Tokens Remaining</span>
                         <span className="text-green-600 dark:text-green-400">{currentTokens ?? user?.toolkit_tokens ?? 0}/{(() => {
                           const tokens = currentTokens ?? user?.toolkit_tokens ?? 0;
-                          if (tokens <= 50) return 50;      // Free tier
+                          if (tokens <= 50) return 50;       // Free tier
                           if (tokens <= 250) return 250;    // Premium tier (50 + 200)
                           return 1050;                       // Ultra tier (50 + 1000)
                         })()}</span>
@@ -337,20 +337,28 @@ export default function Navbar() {
                   </div>
 
                   <div className="border-t border-gray-200 dark:border-gray-700 py-2">
+                  <Link
+                      href={`settings?tab=account&subtab=billing`}
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <CreditCard className="w-4 h-4 mr-2" />
+                      <span>Purchase Toolkit Tokens</span>
+                    </Link>
                     <Link
                       href="/settings"
                       className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       <Settings className="w-4 h-4 mr-2" />
-                      <span>Account Settings</span>
+                      <span>Manage Settings</span>
                     </Link>
                     <Link
                       href={`/profile/${user?.username}`}
                       className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                     >
                       <User className="w-4 h-4 mr-2" />
-                      <span>View Profile</span>
+                      <span>View Your Profile</span>
                     </Link>
+                    
                     <button 
                       onClick={handleLogout}
                       className="w-full flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
